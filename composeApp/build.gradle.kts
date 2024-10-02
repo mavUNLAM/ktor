@@ -40,6 +40,14 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.core)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(kotlincrypto.endians.endians)
+            implementation(kotlincrypto.hash.sha2)
+            implementation(kotlincrypto.hash.sha3)
+            implementation(kotlincrypto.macs.hmac.sha2)
+            implementation(kotlincrypto.macs.hmac.sha3)
+            implementation(kotlincrypto.macs.kmac)
+            implementation(kotlincrypto.secureRandom)
+            implementation(kotlincrypto.hash.md5)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
