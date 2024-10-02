@@ -4,10 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Result(
+data class Character(
     @SerialName("description") val description: String,
-    @SerialName("id") val id: String,
-    @SerialName("modified") val modified: String,
+    @SerialName("id") val id: Int,
     @SerialName("name") val name: String,
     @SerialName("thumbnail") val thumbnail: Thumbnail,
 )

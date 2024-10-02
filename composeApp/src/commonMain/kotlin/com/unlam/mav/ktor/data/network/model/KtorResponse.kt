@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class KtorResponse(
-    @SerialName("code") val code: String,
-    @SerialName("data")val data: Data,
+    @SerialName("code") val code: Int,
+    @SerialName("data") val data: CharacterDataContainer,
     @SerialName("etag") val etag: String,
     @SerialName("status") val status: String
 )
