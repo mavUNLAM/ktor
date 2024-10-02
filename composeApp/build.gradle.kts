@@ -48,6 +48,7 @@ kotlin {
             implementation(kotlincrypto.macs.kmac)
             implementation(kotlincrypto.secureRandom)
             implementation(kotlincrypto.hash.md5)
+            implementation(libs.kotlinx.datetime)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
