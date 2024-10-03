@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 kotlin {
@@ -25,6 +26,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -35,10 +38,25 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.contentnegotiation)
+            implementation(libs.ktor.serialization.json)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(kotlincrypto.endians.endians)
+            implementation(kotlincrypto.hash.sha2)
+            implementation(kotlincrypto.hash.sha3)
+            implementation(kotlincrypto.macs.hmac.sha2)
+            implementation(kotlincrypto.macs.hmac.sha3)
+            implementation(kotlincrypto.macs.kmac)
+            implementation(kotlincrypto.secureRandom)
+            implementation(kotlincrypto.hash.md5)
+            implementation(libs.kotlinx.datetime)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.ktor.client.okhttp)
         }
     }
 }
