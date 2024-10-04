@@ -52,6 +52,7 @@ kotlin {
             implementation(kotlincrypto.secureRandom)
             implementation(kotlincrypto.hash.md5)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.navigation.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
