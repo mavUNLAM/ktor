@@ -34,7 +34,7 @@ class KtorService {
         }
     }
     companion object {
-        private const val LIMIT = "100"
+        private const val LIMIT = "20"
         private const val CHARACTERS_BASE_URL = "https://gateway.marvel.com/v1/public/characters"
     }
 
