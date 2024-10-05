@@ -1,13 +1,9 @@
-package com.unlam.mav.ktor
+package com.unlam.mav.ktor.ui.galeryscreen
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,26 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
-import com.unlam.mav.ktor.ui.galeryscreen.GalleryScreenState
-import com.unlam.mav.ktor.ui.galeryscreen.GalleryScreenViewModel
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            App()
-        }
-    }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
-}
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun GalleryScreen(
@@ -63,28 +41,14 @@ fun GalleryScreen(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
 fun GalleryScreenContent(
     modifier: Modifier = Modifier,
-    characters: List<MarvelCharacter> = listOf(
-    MarvelCharacter(
-        id = 0,
-        name = "Name 0",
-        description = "Description",
-        thumbnail = "image.jpg"
-    ),
-    MarvelCharacter(
-        id = 1,
-        name = "Name 1",
-        description = "Description",
-        thumbnail = "image.jpg"
-    )
-),
+    characters: List<MarvelCharacter>,
     onCharacterClick: (Int) -> Unit = {},
     onListEndReached: () -> Unit = {}
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier) {
         //insertar imagen de fondo
         //crear buscador
         CharacterList(
@@ -96,24 +60,10 @@ fun GalleryScreenContent(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
 fun CharacterList(
     modifier: Modifier = Modifier,
-    characters: List<MarvelCharacter> = listOf(
-        MarvelCharacter(
-        id = 0,
-        name = "Name 0",
-        description = "Description",
-        thumbnail = "image.jpg"
-        ),
-        MarvelCharacter(
-            id = 1,
-            name = "Name 1",
-            description = "Description",
-            thumbnail = "image.jpg"
-        )
-    ),
+    characters: List<MarvelCharacter>,
     onCharacterClick: (Int) -> Unit = {},
     onListEndReached: () -> Unit = {}
 ) {
@@ -134,7 +84,7 @@ fun CharacterList(
     }
 
     LazyColumn(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         state = listState
     ) {
         items(
@@ -149,7 +99,7 @@ fun CharacterList(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun CharacterItem(
     modifier: Modifier = Modifier,
@@ -166,9 +116,9 @@ fun CharacterItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(text = character.thumbnail)
-            Text(text = character.name)
-            Text(text = character.description)
+            Text(text = character.thumbnail.substringAfterLast("."))
+            Text(text = character.name.trim())
+            Text(text = character.description.trim())
         }
     }
 }

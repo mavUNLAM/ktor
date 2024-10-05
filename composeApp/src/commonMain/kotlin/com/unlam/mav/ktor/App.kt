@@ -1,29 +1,42 @@
 package com.unlam.mav.ktor
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.unlam.mav.ktor.data.network.KtorService
 import com.unlam.mav.ktor.data.network.login.LogIn
-import kotlinx.coroutines.launch
+import com.unlam.mav.ktor.ui.galeryscreen.GalleryScreen
+import com.unlam.mav.ktor.ui.galeryscreen.GalleryScreenViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App() {
     MaterialTheme {
+        val ktorService = KtorService()
+        val credentials = LogIn().logInNow("user", "password")
+        val viewModel = GalleryScreenViewModel(credentials, ktorService)
+        GalleryScreen(
+            modifier = Modifier.fillMaxSize(),
+            viewModel = viewModel
+        )
+    }
+}
+
+/*
+@Composable
+fun GreetingView(text: String) {
+    Text(
+        modifier = Modifier.fillMaxSize(),
+        text = text
+    )
+}
+
+ */
+
+/*
+MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = { showContent = !showContent }) {
@@ -49,12 +62,4 @@ fun App() {
             }
         }
     }
-}
-
-@Composable
-fun GreetingView(text: String) {
-    Text(
-        modifier = Modifier.fillMaxSize(),
-        text = text
-    )
-}
+ */
