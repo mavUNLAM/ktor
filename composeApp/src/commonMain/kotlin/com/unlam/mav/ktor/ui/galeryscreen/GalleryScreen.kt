@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,13 +12,14 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun GalleryScreen(
@@ -27,7 +27,7 @@ fun GalleryScreen(
     viewModel: GalleryScreenViewModel,
     onCharacterClick: (Int) -> Unit = {}
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsState()
 
     when (state) {
         is GalleryScreenState.Loading -> CircularProgressIndicator(modifier = modifier)
@@ -52,7 +52,7 @@ fun GalleryScreenContent(
         //insertar imagen de fondo
         //crear buscador
         CharacterList(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth(),
             characters = characters,
             onCharacterClick = onCharacterClick,
             onListEndReached = onListEndReached
@@ -87,7 +87,10 @@ fun CharacterList(
         modifier = modifier,
         state = listState
     ) {
-        items(characters) {
+        items(
+            items = characters,
+            key = { character -> character.id }
+        ) {
             CharacterItem(
                 modifier = Modifier.clickable { onCharacterClick(it.id) },
                 character = it
@@ -96,6 +99,7 @@ fun CharacterList(
     }
 }
 
+@Preview
 @Composable
 fun CharacterItem(
     modifier: Modifier = Modifier,
@@ -112,8 +116,9 @@ fun CharacterItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(text = character.thumbnail)
-            Text(text = character.description)
+            Text(text = character.thumbnail.substringAfterLast("."))
+            Text(text = character.name.trim())
+            Text(text = character.description.trim())
         }
     }
 }

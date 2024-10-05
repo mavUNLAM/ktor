@@ -18,7 +18,7 @@ class GalleryScreenViewModel(
     val state = _state.asStateFlow()
 
     private var currentPage = 0
-    private var currentList = emptyList<MarvelCharacter>()
+    private val currentList = mutableListOf<MarvelCharacter>()
 
     init {
         loadCharacters()
@@ -40,7 +40,7 @@ class GalleryScreenViewModel(
                     logIngCredentials = credentials
                 )
             val list: List<MarvelCharacter> = characters.map { it.toMarvelCharacter() }
-            currentList = currentList + list
+            currentList.addAll(list)
             _state.value = GalleryScreenState.Success(currentList)
         }
     }
