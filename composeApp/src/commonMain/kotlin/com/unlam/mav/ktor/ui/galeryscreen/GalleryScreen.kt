@@ -18,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -119,7 +118,7 @@ fun CharacterItem(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             AsyncImage(
-                model = "https://i.annihil.us/u/prod/marvel/i/mg/6/20/52602f21f29ec.jpg",
+                model = character.thumbnail,
                 contentDescription = character.name
             )
         }
