@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import coil3.compose.AsyncImage
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -116,7 +117,11 @@ fun CharacterItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(text = character.thumbnail.substringAfterLast("."))
+            AsyncImage(
+                model = "https://loremflickr.com/320/240?lock=1",
+                contentDescription = character.name
+            )
+            //Text(text = character.thumbnail.substringAfterLast("."))
             Text(text = character.name.trim())
             Text(text = character.description.trim())
         }
