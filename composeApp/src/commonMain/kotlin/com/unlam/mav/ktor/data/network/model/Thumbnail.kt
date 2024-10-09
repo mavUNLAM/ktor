@@ -8,3 +8,5 @@ data class Thumbnail(
     @SerialName("extension")val extension: String,
     @SerialName("path")val path: String
 )
+
+fun Thumbnail.toUrl(): String = "$path.$extension"
