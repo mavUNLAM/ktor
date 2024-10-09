@@ -9,4 +9,9 @@ data class Thumbnail(
     @SerialName("path")val path: String
 )
 
-fun Thumbnail.toUrl(): String = "$path.$extension"
+fun Thumbnail.toUrl(): String {
+    return if (path.isNotBlank() && path.contains("http:") ) {
+        val tempPath = path.replace("http:", "https:")
+        "$tempPath.$extension"
+    } else ""
+}
