@@ -16,10 +16,13 @@ import io.ktor.client.request.parameter
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
 class KtorService {
+    // MarvelCrypto y HttpClient tienen que ser parámetros de la clase
     private val client = HttpClient {
         install(ContentNegotiation) {
             json(
@@ -59,5 +62,28 @@ class KtorService {
         return response.body<KtorResponse>().data.results
     }
 
-
+    fun getCharactersFlow(
+        page: Int,
+        logIngCredentials: LogIngCredentials,
+        orderBy: KtorOrderBy
+    ): Flow<List<Character>> = flow {
+        val offset = (page - 1) * LIMIT.toInt()
+        val timestamp = Clock.System.now().toEpochMilliseconds()
+        val hash = MarvelCrypto()
+            .getHash(
+                timestamp.toString() +
+                        logIngCredentials.privateKey +
+                        logIngCredentials.publicKey
+            )
+        val response = client.get(CHARACTERS_BASE_URL) {
+            contentType(ContentType.Application.Json)
+            parameter("ts", timestamp.toString())
+            parameter("apikey", logIngCredentials.publicKey)
+            parameter("hash", hash)
+            parameter("orderBy", orderBy.parameter)
+            parameter("limit", LIMIT)
+            parameter("offset", offset)
+        }
+        emit(response.body<KtorResponse>().data.results)
+    }
 }
