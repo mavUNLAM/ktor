@@ -6,6 +6,8 @@ import com.unlam.mav.ktor.data.network.model.KtorResponse
 import com.unlam.mav.ktor.data.network.model.Character
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -14,11 +16,16 @@ import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.utils.io.errors.IOException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.datetime.Clock
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
 class KtorService {
@@ -39,6 +46,8 @@ class KtorService {
     companion object {
         private const val LIMIT = "20"
         private const val CHARACTERS_BASE_URL = "https://gateway.marvel.com/v1/public/characters"
+        private const val HTTPS_OK_MIN = 200
+        private const val HTTPS_OK_MAX = 299
     }
 
     suspend fun getCharacters(page: Int, logIngCredentials: LogIngCredentials): List<Character> {
@@ -66,24 +75,40 @@ class KtorService {
         page: Int,
         logIngCredentials: LogIngCredentials,
         orderBy: KtorOrderBy
-    ): Flow<List<Character>> = flow {
+    ): Flow<KtorState> = flow {
         val offset = (page - 1) * LIMIT.toInt()
         val timestamp = Clock.System.now().toEpochMilliseconds()
+        // la dependencia de marvelCrypto se tiene que pedir por parámetro de la clase.
         val hash = MarvelCrypto()
             .getHash(
                 timestamp.toString() +
                         logIngCredentials.privateKey +
                         logIngCredentials.publicKey
             )
-        val response = client.get(CHARACTERS_BASE_URL) {
-            contentType(ContentType.Application.Json)
-            parameter("ts", timestamp.toString())
-            parameter("apikey", logIngCredentials.publicKey)
-            parameter("hash", hash)
-            parameter("orderBy", orderBy.parameter)
-            parameter("limit", LIMIT)
-            parameter("offset", offset)
+        try {
+            val response = client.get(CHARACTERS_BASE_URL) {
+                contentType(ContentType.Application.Json)
+                parameter("ts", timestamp.toString())
+                parameter("apikey", logIngCredentials.publicKey)
+                parameter("hash", hash)
+                parameter("orderBy", orderBy.parameter)
+                parameter("limit", LIMIT)
+                parameter("offset", offset)
+            }
+            if(response.status == HttpStatusCode.OK){
+                emit(KtorState.Success(response.body<KtorResponse>().data.results))
+            }else{
+                //tengo que crear KtorException y usarlo en vez de Exception
+                emit(KtorState.Error(Exception("Error ${response.status.value}")))
+            }
+        }catch (e: ClientRequestException) {
+            emit(KtorState.Error(e))
+        }catch (e: ServerResponseException) {
+            emit(KtorState.Error(e))
+        }catch (e: IOException) {
+            emit(KtorState.Error(e))
+        }catch (e: SerializationException) {
+            emit(KtorState.Error(e))
         }
-        emit(response.body<KtorResponse>().data.results)
-    }
+    }.flowOn(Dispatchers.IO)
 }
