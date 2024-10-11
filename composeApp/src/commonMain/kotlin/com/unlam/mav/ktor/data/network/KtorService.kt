@@ -46,8 +46,6 @@ class KtorService {
     companion object {
         private const val LIMIT = "20"
         private const val CHARACTERS_BASE_URL = "https://gateway.marvel.com/v1/public/characters"
-        private const val HTTPS_OK_MIN = 200
-        private const val HTTPS_OK_MAX = 299
     }
 
     suspend fun getCharacters(page: Int, logIngCredentials: LogIngCredentials): List<Character> {
@@ -76,6 +74,7 @@ class KtorService {
         logIngCredentials: LogIngCredentials,
         orderBy: KtorOrderBy
     ): Flow<KtorState> = flow {
+        emit(KtorState.Loading)
         val offset = (page - 1) * LIMIT.toInt()
         val timestamp = Clock.System.now().toEpochMilliseconds()
         // la dependencia de marvelCrypto se tiene que pedir por parámetro de la clase.

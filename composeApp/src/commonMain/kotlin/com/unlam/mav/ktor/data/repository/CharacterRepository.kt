@@ -4,5 +4,5 @@ import com.unlam.mav.ktor.domain.model.MarvelCharacter
 import kotlinx.coroutines.flow.Flow
 
 interface CharacterRepository {
-    suspend fun getCharacters(page: Int, orderBy: OrderBy): Flow<List<MarvelCharacter>>
+    fun getCharacters(page: Int, orderBy: OrderBy): Flow<List<MarvelCharacter>>
 }
