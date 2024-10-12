@@ -1,7 +1,8 @@
 package com.unlam.mav.ktor.data.network
 
 import com.unlam.mav.ktor.core.MarvelCrypto
-import com.unlam.mav.ktor.data.network.login.LogIngCredentials
+import com.unlam.mav.ktor.data.login
+import com.unlam.mav.ktor.data.network.login.LogingCredentials
 import com.unlam.mav.ktor.data.network.model.KtorResponse
 import com.unlam.mav.ktor.data.network.model.Character
 import io.ktor.client.HttpClient
@@ -48,7 +49,7 @@ class KtorService {
         private const val CHARACTERS_BASE_URL = "https://gateway.marvel.com/v1/public/characters"
     }
 
-    suspend fun getCharacters(page: Int, logIngCredentials: LogIngCredentials): List<Character> {
+    suspend fun getCharacters(page: Int, logIngCredentials: LogingCredentials = login): List<Character> {
         val offset = (page - 1) * LIMIT.toInt()
         val timestamp = Clock.System.now().toEpochMilliseconds()
         val hash = MarvelCrypto()
@@ -71,7 +72,7 @@ class KtorService {
 
     fun getCharactersFlow(
         page: Int,
-        logIngCredentials: LogIngCredentials,
+        logIngCredentials: LogingCredentials = login,
         orderBy: KtorOrderBy
     ): Flow<KtorState> = flow {
         emit(KtorState.Loading)

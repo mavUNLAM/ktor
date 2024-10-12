@@ -3,7 +3,7 @@ package com.unlam.mav.ktor.ui.galeryscreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unlam.mav.ktor.data.network.KtorService
-import com.unlam.mav.ktor.data.network.login.LogIngCredentials
+import com.unlam.mav.ktor.data.network.login.LogingCredentials
 import com.unlam.mav.ktor.data.network.model.toMarvelCharacter
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class GalleryScreenViewModel(
-    private val credentials: LogIngCredentials,
+    private val credentials: LogingCredentials,
     private val ktorService: KtorService
     ): ViewModel() {
     private val _state = MutableStateFlow<GalleryScreenState>(GalleryScreenState.Loading)
@@ -36,8 +36,8 @@ class GalleryScreenViewModel(
             currentPage++
             val characters = ktorService
                 .getCharacters(
-                    page = currentPage,
-                    logIngCredentials = credentials
+                    page = currentPage
+                    //,logIngCredentials = credentials. cambiarlo en un futuro a una implementación de login
                 )
             val list: List<MarvelCharacter> = characters.map { it.toMarvelCharacter() }
             currentList.addAll(list)

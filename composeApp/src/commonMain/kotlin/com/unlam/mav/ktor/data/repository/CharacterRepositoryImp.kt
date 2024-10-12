@@ -2,7 +2,7 @@ package com.unlam.mav.ktor.data.repository
 
 import com.unlam.mav.ktor.data.network.KtorOrderBy
 import com.unlam.mav.ktor.data.network.KtorService
-import com.unlam.mav.ktor.data.network.login.LogIngCredentials
+import com.unlam.mav.ktor.data.network.login.LogingCredentials
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -19,7 +19,7 @@ class CharacterRepositoryImp(private val ktorService: KtorService):CharacterRepo
             .getCharactersFlow(
                 page = page,
                 orderBy =  orderByKtor,
-                logIngCredentials = LogIngCredentials("","")
+                logIngCredentials = LogingCredentials("","")
             )
 
 
