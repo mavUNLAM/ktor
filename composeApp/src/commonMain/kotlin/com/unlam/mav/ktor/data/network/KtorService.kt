@@ -1,14 +1,12 @@
 package com.unlam.mav.ktor.data.network
 
 import com.unlam.mav.ktor.core.MarvelCrypto
-import com.unlam.mav.ktor.data.login
+import com.unlam.mav.ktor.data.LOGIN_CREDENTIALS
 import com.unlam.mav.ktor.data.network.login.LogingCredentials
-import com.unlam.mav.ktor.data.network.model.KtorResponse
 import com.unlam.mav.ktor.data.network.model.Character
+import com.unlam.mav.ktor.data.network.model.KtorResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.ServerResponseException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -20,13 +18,11 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.utils.io.errors.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.datetime.Clock
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
 class KtorService {
@@ -49,7 +45,7 @@ class KtorService {
         private const val CHARACTERS_BASE_URL = "https://gateway.marvel.com/v1/public/characters"
     }
 
-    suspend fun getCharacters(page: Int, logIngCredentials: LogingCredentials = login): List<Character> {
+    suspend fun getCharacters(page: Int, logIngCredentials: LogingCredentials = LOGIN_CREDENTIALS): List<Character> {
         val offset = (page - 1) * LIMIT.toInt()
         val timestamp = Clock.System.now().toEpochMilliseconds()
         val hash = MarvelCrypto()
@@ -72,7 +68,7 @@ class KtorService {
 
     fun getCharactersFlow(
         page: Int,
-        logIngCredentials: LogingCredentials = login,
+        logIngCredentials: LogingCredentials = LOGIN_CREDENTIALS,
         orderBy: KtorOrderBy
     ): Flow<KtorState> = flow {
         emit(KtorState.Loading)
@@ -85,30 +81,20 @@ class KtorService {
                         logIngCredentials.privateKey +
                         logIngCredentials.publicKey
             )
-        try {
-            val response = client.get(CHARACTERS_BASE_URL) {
-                contentType(ContentType.Application.Json)
-                parameter("ts", timestamp.toString())
-                parameter("apikey", logIngCredentials.publicKey)
-                parameter("hash", hash)
-                parameter("orderBy", orderBy.parameter)
-                parameter("limit", LIMIT)
-                parameter("offset", offset)
-            }
-            if(response.status == HttpStatusCode.OK){
-                emit(KtorState.Success(response.body<KtorResponse>().data.results))
-            }else{
-                //tengo que crear KtorException y usarlo en vez de Exception
-                emit(KtorState.Error(Exception("Error ${response.status.value}")))
-            }
-        }catch (e: ClientRequestException) {
-            emit(KtorState.Error(e))
-        }catch (e: ServerResponseException) {
-            emit(KtorState.Error(e))
-        }catch (e: IOException) {
-            emit(KtorState.Error(e))
-        }catch (e: SerializationException) {
-            emit(KtorState.Error(e))
+        val response = client.get(CHARACTERS_BASE_URL) {
+            contentType(ContentType.Application.Json)
+            parameter("ts", timestamp.toString())
+            parameter("apikey", logIngCredentials.publicKey)
+            parameter("hash", hash)
+            parameter("orderBy", orderBy.parameter)
+            parameter("limit", LIMIT)
+            parameter("offset", offset)
+        }
+        if(response.status == HttpStatusCode.OK){
+            emit(KtorState.Success(response.body<KtorResponse>().data.results))
+        }else{
+            //tengo que crear KtorException y usarlo en vez de Exception
+            emit(KtorState.Error(Exception("Network Error ${response.status.value} in KtorService")))
         }
     }.flowOn(Dispatchers.IO)
 }
