@@ -18,6 +18,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -25,7 +26,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
-class KtorService {
+class KtorService(
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) {
     // MarvelCrypto y HttpClient tienen que ser parámetros de la clase
     private val client = HttpClient {
         install(ContentNegotiation) {
@@ -96,5 +99,5 @@ class KtorService {
             //tengo que crear KtorException y usarlo en vez de Exception
             emit(KtorState.Error(Exception("Network Error ${response.status.value} in KtorService")))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(ioDispatcher)
 }

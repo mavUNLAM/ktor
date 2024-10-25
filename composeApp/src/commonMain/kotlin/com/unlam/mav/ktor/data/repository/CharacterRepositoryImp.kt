@@ -5,13 +5,17 @@ import com.unlam.mav.ktor.data.network.KtorOrderBy
 import com.unlam.mav.ktor.data.network.KtorService
 import com.unlam.mav.ktor.data.network.KtorState
 import com.unlam.mav.ktor.data.network.model.toMarvelCharacter
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class CharacterRepositoryImp(private val ktorService: KtorService):CharacterRepository {
+class CharacterRepositoryImp(
+    private val ktorService: KtorService,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    ):CharacterRepository {
 
     override fun getCharacters(page: Int, orderBy: OrderBy): Flow<CharacterRepositoryState> = flow {
         emit(CharacterRepositoryState.Loading)
@@ -29,11 +33,11 @@ class CharacterRepositoryImp(private val ktorService: KtorService):CharacterRepo
             .getCharactersFlow(
                 page = page,
                 orderBy =  orderByKtor,
-                logIngCredentials = LOGIN_CREDENTIALS
+                logIngCredentials = LOGIN_CREDENTIALS //internal val LOGIN_CREDENTIALS = (publicKey, privateKey)
             ).catch { emit(CharacterRepositoryState.Error(it)) } // hay que especificar más el error
             .collect { ktorState ->
                 when(ktorState){
-                    is KtorState.Error -> CharacterRepositoryState.Error(ktorState.error) // lo mismo acá
+                    is KtorState.Error -> emit(CharacterRepositoryState.Error(ktorState.error)) // lo mismo acá
                     is KtorState.Loading -> emit(CharacterRepositoryState.Loading)
                     is KtorState.Success -> {
                         val tempList = ktorState.characters.map { it.toMarvelCharacter() }
@@ -41,5 +45,5 @@ class CharacterRepositoryImp(private val ktorService: KtorService):CharacterRepo
                     }
                 }
             }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(ioDispatcher)
 }
