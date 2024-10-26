@@ -12,6 +12,7 @@ class UC_Gallery(
     private val repository: CharacterRepository
 ) {
     private var nextPage = 0
+    // falta que cuando ya no haya más páginas -> mostrar todos los personajes sin descripción
     private val emptyDescriptionList = mutableListOf<MarvelCharacter>()
 
     private val _marvelList = MutableStateFlow<List<MarvelCharacter>>(emptyList())
