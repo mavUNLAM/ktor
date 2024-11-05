@@ -57,7 +57,7 @@ fun GalleryScreen(
             modifier = modifier,
             characters = (state as GalleryScreenState.Success).characters,
             onCharacterClick = onCharacterClick,
-            onListEndReached = viewModel::loadCharacters
+            onListEndReached = viewModel::loadCharactersV2
         )
         is GalleryScreenState.Error -> Text((state as GalleryScreenState.Error).message)
     }
