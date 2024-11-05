@@ -2,26 +2,26 @@ package com.unlam.mav.ktor.ui.galeryscreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unlam.mav.ktor.data.network.KtorService
-import com.unlam.mav.ktor.data.network.login.LogIngCredentials
-import com.unlam.mav.ktor.data.network.model.toMarvelCharacter
-import com.unlam.mav.ktor.domain.model.MarvelCharacter
+import com.unlam.mav.ktor.data.repository.CharacterRepository
+import com.unlam.mav.ktor.data.repository.CharacterRepositoryState
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class GalleryScreenViewModel(
-    private val credentials: LogIngCredentials,
-    private val ktorService: KtorService
+    private val repository: CharacterRepository,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
     ): ViewModel() {
     private val _state = MutableStateFlow<GalleryScreenState>(GalleryScreenState.Loading)
     val state = _state.asStateFlow()
 
     private var currentPage = 0
-    private val currentList = mutableListOf<MarvelCharacter>()
 
     init {
-        loadCharacters()
+        loadCharactersV2()
     }
 
     /**
@@ -31,17 +31,31 @@ class GalleryScreenViewModel(
      *
      * Tiene un problema: va a pedir la siguiente página aunque no haya más.
      */
-    fun loadCharacters() {
-        viewModelScope.launch {
+    fun loadCharactersV2() {
+        viewModelScope.launch(ioDispatcher) {
             currentPage++
-            val characters = ktorService
-                .getCharacters(
-                    page = currentPage,
-                    logIngCredentials = credentials
-                )
-            val list: List<MarvelCharacter> = characters.map { it.toMarvelCharacter() }
-            currentList.addAll(list)
-            _state.value = GalleryScreenState.Success(currentList)
+            when (val repositoryResult = repository.getCharacters(currentPage)) {
+                is CharacterRepositoryState.Error -> {
+                    val error = repositoryResult.error
+                    _state.update {
+                        GalleryScreenState.Error(error.toString())
+                    }
+                }
+                is CharacterRepositoryState.Success -> {
+                    val list = repositoryResult.characters
+
+                    if(currentPage == 1) {
+                        _state.update {
+                            GalleryScreenState.Success(list)
+                        }
+                    } else {
+                        _state.update {
+                            val oldState = it as GalleryScreenState.Success
+                            GalleryScreenState.Success(oldState.characters + list)
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -16,5 +16,5 @@ fun Character.toMarvelCharacter() = MarvelCharacter(
     id = id,
     name = name,
     description = description,
-    thumbnail = "${thumbnail.path}.${thumbnail.extension}"
+    thumbnail = thumbnail.toUrl()
 )

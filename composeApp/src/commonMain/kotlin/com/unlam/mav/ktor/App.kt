@@ -5,7 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.unlam.mav.ktor.data.network.KtorService
-import com.unlam.mav.ktor.data.network.login.LogIn
+import com.unlam.mav.ktor.data.repository.CharacterRepositoryImp
 import com.unlam.mav.ktor.ui.galeryscreen.GalleryScreen
 import com.unlam.mav.ktor.ui.galeryscreen.GalleryScreenViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -15,8 +15,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App() {
     MaterialTheme {
         val ktorService = KtorService()
-        val credentials = LogIn().logInNow("user", "password")
-        val viewModel = GalleryScreenViewModel(credentials, ktorService)
+        val repository = CharacterRepositoryImp(ktorService)
+        val viewModel = GalleryScreenViewModel(repository = repository)
         GalleryScreen(
             modifier = Modifier.fillMaxSize(),
             viewModel = viewModel

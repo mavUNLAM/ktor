@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import coil3.compose.AsyncImage
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -35,7 +36,7 @@ fun GalleryScreen(
             modifier = modifier,
             characters = (state as GalleryScreenState.Success).characters,
             onCharacterClick = onCharacterClick,
-            onListEndReached = viewModel::loadCharacters
+            onListEndReached = viewModel::loadCharactersV2
         )
         is GalleryScreenState.Error -> Text((state as GalleryScreenState.Error).message)
     }
@@ -116,9 +117,10 @@ fun CharacterItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(text = character.thumbnail.substringAfterLast("."))
-            Text(text = character.name.trim())
-            Text(text = character.description.trim())
+            AsyncImage(
+                model = character.thumbnail,
+                contentDescription = character.name
+            )
         }
     }
 }
