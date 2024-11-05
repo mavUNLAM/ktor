@@ -2,7 +2,6 @@ package com.unlam.mav.ktor.domain
 
 import com.unlam.mav.ktor.data.repository.CharacterRepository
 import com.unlam.mav.ktor.data.repository.CharacterRepositoryState
-import com.unlam.mav.ktor.data.repository.OrderBy
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +22,7 @@ class UC_Gallery(
 
 
     suspend fun getCharacters() {
-        val temp = repository.getCharacters(nextPage, OrderBy.NAME_ASCENDING)
+        val temp = repository.getCharacters(nextPage)
         temp
             .catch { _galleryState.value = UC_GalleryState.Error(it) }
             .collect { repositoryState ->
