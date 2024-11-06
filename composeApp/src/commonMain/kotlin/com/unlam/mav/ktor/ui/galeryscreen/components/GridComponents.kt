@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -36,7 +35,7 @@ fun GalleryItem(
     onClick: (MarvelCharacter) -> Unit = {}
 ) {
     ElevatedCard(
-        modifier = modifier.size(100.dp)
+        modifier = modifier
     ) {
         Box(
             contentAlignment = Alignment.BottomCenter
@@ -45,6 +44,7 @@ fun GalleryItem(
                 model = character.thumbnail,
                 contentDescription = character.name,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .clickable { onClick(character) }
                     .background(color = Color.White),
                 contentScale = ContentScale.Crop
@@ -53,9 +53,9 @@ fun GalleryItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        Color(red = 0, green = 0, blue = 0, alpha = 150)
+                        Color(red = 0, green = 0, blue = 0, alpha = 170)
                     ).padding(4.dp),
-                fontSize = 8.sp,
+                fontSize = 25.sp,
                 color = Color.White,
                 text = character.name,
                 minLines = 2,
@@ -76,7 +76,7 @@ fun GalleryGrid(
 ) {
     val gridState = rememberLazyGridState()
     //buffer tiene que ser mayor o igual a 1
-    val buffer = 6
+    val buffer = 2
     // observa si la lista ha llegado al fin. DerivedStateOf se ha usado para que no recomponga muchas veces
     val reachedBottom: Boolean by remember {
         derivedStateOf {
@@ -91,7 +91,7 @@ fun GalleryGrid(
 
     LazyVerticalGrid(
         modifier = modifier,
-        columns = GridCells.Adaptive(105.dp),
+        columns = GridCells.Adaptive(205.dp),
         state = gridState
     ) {
         items(characters) { character ->
@@ -99,7 +99,7 @@ fun GalleryGrid(
                 character = character,
                 modifier = Modifier
                     .padding(3.dp)
-                    .requiredSize(100.dp),
+                    .requiredSize(190.dp),
                 onClick = onClick
             )
         }
