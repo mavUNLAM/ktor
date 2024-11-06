@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,13 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import coil3.compose.AsyncImage
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
+import com.unlam.mav.ktor.ui.galeryscreen.components.GalleryGrid
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun GalleryScreen(
     modifier: Modifier = Modifier,
     viewModel: GalleryScreenViewModel,
-    onCharacterClick: (Int) -> Unit = {}
+    onCharacterClick: (MarvelCharacter) -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -46,9 +48,10 @@ fun GalleryScreen(
 fun GalleryScreenContent(
     modifier: Modifier = Modifier,
     characters: List<MarvelCharacter>,
-    onCharacterClick: (Int) -> Unit = {},
+    onCharacterClick: (MarvelCharacter) -> Unit = {},
     onListEndReached: () -> Unit = {}
 ) {
+    /*
     Box(modifier = modifier) {
         //insertar imagen de fondo
         //crear buscador
@@ -57,6 +60,17 @@ fun GalleryScreenContent(
             characters = characters,
             onCharacterClick = onCharacterClick,
             onListEndReached = onListEndReached
+        )
+    }
+
+     */
+
+    Box(modifier = modifier) {
+        GalleryGrid(
+            modifier = Modifier.fillMaxSize(),
+            characters = characters,
+            onClick = onCharacterClick,
+            onGridEnd = onListEndReached
         )
     }
 }
