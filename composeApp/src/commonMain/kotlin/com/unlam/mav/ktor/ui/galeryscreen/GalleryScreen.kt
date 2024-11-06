@@ -1,32 +1,29 @@
 package com.unlam.mav.ktor.ui.galeryscreen
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import coil3.compose.AsyncImage
+import androidx.compose.ui.unit.dp
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import com.unlam.mav.ktor.ui.galeryscreen.components.GalleryItem
 
 @Composable
 fun GalleryScreen(
     modifier: Modifier = Modifier,
     viewModel: GalleryScreenViewModel,
-    onCharacterClick: (Int) -> Unit = {}
+    onCharacterClick: (MarvelCharacter) -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -46,7 +43,7 @@ fun GalleryScreen(
 fun GalleryScreenContent(
     modifier: Modifier = Modifier,
     characters: List<MarvelCharacter>,
-    onCharacterClick: (Int) -> Unit = {},
+    onCharacterClick: (MarvelCharacter) -> Unit = {},
     onListEndReached: () -> Unit = {}
 ) {
     Box(modifier = modifier) {
@@ -65,12 +62,12 @@ fun GalleryScreenContent(
 fun CharacterList(
     modifier: Modifier = Modifier,
     characters: List<MarvelCharacter>,
-    onCharacterClick: (Int) -> Unit = {},
+    onCharacterClick: (MarvelCharacter) -> Unit = {},
     onListEndReached: () -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     //buffer tiene que ser mayor o igual a 1
-    val buffer = 1
+    val buffer = 2
     // observa si la lista ha llegado al fin. DerivedStateOf se ha usado para que no recomponga muchas veces
     val reachedBottom: Boolean by remember {
         derivedStateOf {
@@ -92,35 +89,12 @@ fun CharacterList(
             items = characters,
             key = { character -> character.id }
         ) {
-            CharacterItem(
-                modifier = Modifier.clickable { onCharacterClick(it.id) },
-                character = it
+            GalleryItem(
+                modifier = Modifier.padding(8.dp),
+                character = it,
+                onClick = onCharacterClick
             )
         }
     }
 }
 
-@Preview
-@Composable
-fun CharacterItem(
-    modifier: Modifier = Modifier,
-    character: MarvelCharacter = MarvelCharacter(
-        id = 0,
-        name = "Name",
-        description = "Description",
-        thumbnail = "image.jpg"
-    )
-) {
-    Box(modifier = modifier) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            AsyncImage(
-                model = character.thumbnail,
-                contentDescription = character.name
-            )
-        }
-    }
-}
