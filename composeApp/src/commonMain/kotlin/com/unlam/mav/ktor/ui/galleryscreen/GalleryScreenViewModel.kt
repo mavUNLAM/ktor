@@ -1,4 +1,4 @@
-package com.unlam.mav.ktor.ui.galeryscreen
+package com.unlam.mav.ktor.ui.galleryscreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

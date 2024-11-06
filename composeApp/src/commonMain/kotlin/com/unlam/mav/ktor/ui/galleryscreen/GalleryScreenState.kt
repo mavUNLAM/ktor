@@ -1,4 +1,4 @@
-package com.unlam.mav.ktor.ui.galeryscreen
+package com.unlam.mav.ktor.ui.galleryscreen
 
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
 

@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.unlam.mav.ktor.data.network.KtorService
 import com.unlam.mav.ktor.data.repository.CharacterRepositoryImp
-import com.unlam.mav.ktor.ui.galeryscreen.GalleryScreen
-import com.unlam.mav.ktor.ui.galeryscreen.GalleryScreenViewModel
+import com.unlam.mav.ktor.ui.galleryscreen.GalleryScreen
+import com.unlam.mav.ktor.ui.galleryscreen.GalleryScreenViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable

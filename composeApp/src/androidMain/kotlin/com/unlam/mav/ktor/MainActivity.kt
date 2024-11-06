@@ -24,8 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
-import com.unlam.mav.ktor.ui.galeryscreen.GalleryScreenState
-import com.unlam.mav.ktor.ui.galeryscreen.GalleryScreenViewModel
+import com.unlam.mav.ktor.ui.galleryscreen.GalleryScreenState
+import com.unlam.mav.ktor.ui.galleryscreen.GalleryScreenViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

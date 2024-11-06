@@ -1,4 +1,4 @@
-package com.unlam.mav.ktor.ui.galeryscreen
+package com.unlam.mav.ktor.ui.galleryscreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,15 +17,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
-import com.unlam.mav.ktor.ui.galeryscreen.components.GalleryItem
+import com.unlam.mav.ktor.ui.galleryscreen.components.GalleryItem
 
 @Composable
 fun GalleryScreen(
     modifier: Modifier = Modifier,
-    viewModel: GalleryScreenViewModel,
-    onCharacterClick: (MarvelCharacter) -> Unit = {}
+    viewModel: GalleryScreenViewModel
 ) {
     val state by viewModel.state.collectAsState()
+    val onCharacterClick: (MarvelCharacter) -> Unit = {}
 
     when (state) {
         is GalleryScreenState.Loading -> CircularProgressIndicator(modifier = modifier)

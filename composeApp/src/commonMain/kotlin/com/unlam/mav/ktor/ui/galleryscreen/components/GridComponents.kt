@@ -1,5 +1,6 @@
-package com.unlam.mav.ktor.ui.galeryscreen.components
+package com.unlam.mav.ktor.ui.galleryscreen.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -16,7 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,8 +37,13 @@ fun GalleryItem(
     character: MarvelCharacter,
     onClick: (MarvelCharacter) -> Unit = {}
 ) {
+    var showDetails by remember { mutableStateOf(false) }
     ElevatedCard(
         modifier = modifier
+            .clickable {
+                showDetails = !showDetails
+                onClick(character) // en un futuro aquí activo la pantalla de detalles
+            }
     ) {
         Box(
             contentAlignment = Alignment.BottomCenter
@@ -45,7 +53,6 @@ fun GalleryItem(
                 contentDescription = character.name,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onClick(character) }
                     .background(color = Color.White),
                 contentScale = ContentScale.Crop
             )
@@ -62,6 +69,13 @@ fun GalleryItem(
                 maxLines = 2,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.ExtraBold,
+            )
+        }
+        AnimatedVisibility(showDetails) {
+            Text(
+                modifier = Modifier.padding(4.dp),
+                text = character.description,
+                textAlign = TextAlign.Justify
             )
         }
     }
