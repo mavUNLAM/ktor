@@ -1,4 +1,4 @@
-package com.unlam.mav.ktor.ui.galeryscreen.components
+package com.unlam.mav.ktor.ui.galleryscreen.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
