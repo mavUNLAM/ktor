@@ -1,5 +1,6 @@
 package com.unlam.mav.ktor.ui.galleryscreen.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -70,7 +71,7 @@ fun GalleryItem(
                 fontWeight = FontWeight.ExtraBold,
             )
         }
-        if(showDetails) {
+        AnimatedVisibility(showDetails) {
             Text(
                 modifier = Modifier.padding(4.dp),
                 text = character.description,
