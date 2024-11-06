@@ -1,4 +1,4 @@
-package com.unlam.mav.ktor.ui.detailscreen
+package com.unlam.mav.ktor.ui.galleryscreen.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
