@@ -22,10 +22,10 @@ import com.unlam.mav.ktor.ui.galleryscreen.components.GalleryItem
 @Composable
 fun GalleryScreen(
     modifier: Modifier = Modifier,
-    viewModel: GalleryScreenViewModel,
-    onCharacterClick: (MarvelCharacter) -> Unit = {}
+    viewModel: GalleryScreenViewModel
 ) {
     val state by viewModel.state.collectAsState()
+    val onCharacterClick: (MarvelCharacter) -> Unit = {}
 
     when (state) {
         is GalleryScreenState.Loading -> CircularProgressIndicator(modifier = modifier)
