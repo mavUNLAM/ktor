@@ -1,8 +1,7 @@
 package com.unlam.mav.ktor.data.repository
 
 import com.unlam.mav.ktor.data.LOGIN_CREDENTIALS
-import com.unlam.mav.ktor.data.database.cache.Database
-import com.unlam.mav.ktor.data.database.cache.DatabaseDriverFactory
+import com.unlam.mav.ktor.data.database.cache.ExpectActualDatabase
 import com.unlam.mav.ktor.data.database.entity.DelightCharacter
 import com.unlam.mav.ktor.data.database.entity.toMarvelCharacter
 import com.unlam.mav.ktor.data.network.KtorService
@@ -13,10 +12,9 @@ import com.unlam.mav.ktor.data.network.model.toMarvelCharacter
 
 class CharacterRepositoryImp(
     private val ktorService: KtorService,
-    databaseDriverFactory: DatabaseDriverFactory
+    private val database: ExpectActualDatabase
 ):CharacterRepository {
 
-    private val database = Database(databaseDriverFactory)
     private var additionalPages = 0
 
     override suspend fun getCharacters(page: Int): CharacterRepositoryState {

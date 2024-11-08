@@ -2,19 +2,19 @@ package com.unlam.mav.ktor.data.database.cache
 
 import com.unlam.mav.ktor.data.database.entity.DelightCharacter
 
-internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
+class ExpectActualDatabase(databaseDriverFactory: DatabaseDriverFactory) {
     private val database = MarvelDatabase(databaseDriverFactory.createDriver())
     private val dbQuery = database.marvelDatabaseQueries
 
-    internal fun getAllCharacters(): List<DelightCharacter> {
+    fun getAllCharacters(): List<DelightCharacter> {
         return dbQuery.selectAllCharacters(::mapCharacterQueryResult).executeAsList()
     }
 
-    internal fun getAllCharactersFromPage(page: Long): List<DelightCharacter> {
+    fun getAllCharactersFromPage(page: Long): List<DelightCharacter> {
         return dbQuery.selectAllCharactersFromPage(page, ::mapCharacterQueryResult).executeAsList()
     }
 
-    internal fun insertCharacter(character: DelightCharacter) {
+    fun insertCharacter(character: DelightCharacter) {
         dbQuery.transaction {
             dbQuery.insertCharacter(
                 id = character.id.toLong(),
@@ -26,7 +26,7 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         }
     }
 
-    internal fun insertCharacterList(characters: List<DelightCharacter>) {
+    fun insertCharacterList(characters: List<DelightCharacter>) {
         dbQuery.transaction {
             characters.forEach { character ->
                 dbQuery.insertCharacter(

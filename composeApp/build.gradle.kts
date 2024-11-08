@@ -30,7 +30,6 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.android.driver)
-            implementation(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -59,7 +58,6 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             implementation(compose.material3)
-            implementation(libs.koin.core)
             implementation(libs.runtime)
         }
         desktopMain.dependencies {
