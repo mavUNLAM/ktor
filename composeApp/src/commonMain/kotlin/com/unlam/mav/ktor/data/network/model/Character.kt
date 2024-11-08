@@ -1,5 +1,6 @@
 package com.unlam.mav.ktor.data.network.model
 
+import com.unlam.mav.ktor.data.database.entity.DelightCharacter
 import com.unlam.mav.ktor.domain.model.MarvelCharacter
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -17,4 +18,12 @@ fun Character.toMarvelCharacter() = MarvelCharacter(
     name = name,
     description = description,
     thumbnail = thumbnail.toUrl()
+)
+
+fun Character.toDelightCharacter(page: Int) = DelightCharacter(
+    id = id,
+    name = name,
+    description = description,
+    thumbnail = thumbnail.toUrl(),
+    page = page
 )

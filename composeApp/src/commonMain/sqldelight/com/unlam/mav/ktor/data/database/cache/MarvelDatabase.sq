@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS Character (
+    id INTEGER PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT,
+    thumbnail TEXT NOT NULL,
+    page INTEGER NOT NULL
+);
+
+CREATE INDEX character_Page ON Character(page);
+
+insertCharacter:
+INSERT OR REPLACE INTO Character(id, name, description, thumbnail, page)
+VALUES(?, ?, ?, ?, ?);
+
+selectAllCharacters:
+SELECT *
+FROM Character;
+
+selectAllCharactersFromPage:
+SELECT *
+FROM Character
+WHERE page = ?;
