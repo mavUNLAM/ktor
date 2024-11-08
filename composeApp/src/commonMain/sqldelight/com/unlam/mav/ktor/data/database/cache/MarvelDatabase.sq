@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS Character (
 CREATE INDEX character_Page ON Character(page);
 
 insertCharacter:
-INSERT INTO Character(id, name, description, thumbnail, page)
+INSERT OR REPLACE INTO Character(id, name, description, thumbnail, page)
 VALUES(?, ?, ?, ?, ?);
 
 selectAllCharacters:

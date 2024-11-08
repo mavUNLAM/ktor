@@ -15,12 +15,15 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App() {
     MaterialTheme {
         val ktorService = KtorService()
+        /*
         val repository = CharacterRepositoryImp(ktorService)
         val viewModel = GalleryScreenViewModel(repository = repository)
         GalleryScreen(
             modifier = Modifier.fillMaxSize(),
             viewModel = viewModel
         )
+
+         */
     }
 }
 
