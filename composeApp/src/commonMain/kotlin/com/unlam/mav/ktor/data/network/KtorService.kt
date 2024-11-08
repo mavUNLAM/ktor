@@ -19,7 +19,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
-class KtorService {
+class KtorService(private val httpClient: HttpClient) {
     // MarvelCrypto y HttpClient tienen que ser parámetros de la clase
     private val client = HttpClient {
         install(ContentNegotiation) {
