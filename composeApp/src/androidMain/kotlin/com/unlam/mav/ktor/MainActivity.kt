@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.remember
 import com.unlam.mav.ktor.data.database.cache.DatabaseDriverFactory
+import com.unlam.mav.ktor.data.network.logging.initLogger
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,7 +16,8 @@ class MainActivity : ComponentActivity() {
                 DatabaseDriverFactory(applicationContext)
             }
             App(
-                databaseDriverFactory = databaseFactory
+                databaseDriverFactory = databaseFactory,
+                initLogger = ::initLogger
             )
         }
     }

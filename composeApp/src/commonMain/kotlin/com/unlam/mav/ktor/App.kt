@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import com.unlam.mav.ktor.data.database.cache.DatabaseDriverFactory
 import com.unlam.mav.ktor.data.database.cache.ExpectActualDatabase
 import com.unlam.mav.ktor.data.network.KtorService
-import com.unlam.mav.ktor.data.network.logging.initLogger
 import com.unlam.mav.ktor.data.repository.CharacterRepositoryImp
 import com.unlam.mav.ktor.ui.galleryscreen.GalleryScreen
 import com.unlam.mav.ktor.ui.galleryscreen.GalleryScreenViewModel
@@ -22,7 +21,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 @Composable
-fun App(databaseDriverFactory: DatabaseDriverFactory) {
+fun App(databaseDriverFactory: DatabaseDriverFactory, initLogger: () -> Unit) {
     MaterialTheme {
         val httpClient = remember {
             HttpClient {
