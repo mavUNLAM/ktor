@@ -1,3 +1,6 @@
+Taller de programación 2024 2c
+Api de Marvel con kotlin/compose multiplatform
+
 This is a Kotlin Multiplatform project targeting Android, Desktop.
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
