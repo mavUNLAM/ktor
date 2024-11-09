@@ -13,6 +13,7 @@ import com.unlam.mav.ktor.ui.galleryscreen.GalleryScreen
 import com.unlam.mav.ktor.ui.galleryscreen.GalleryScreenViewModel
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -31,6 +32,10 @@ fun App(databaseDriverFactory: DatabaseDriverFactory, initLogger: () -> Unit) {
                             ignoreUnknownKeys = true
                         }
                     )
+                }
+                install(HttpRequestRetry) {
+                    retryOnServerErrors(maxRetries = 5)
+                    exponentialDelay()
                 }
                 // usar naper como logger
                 install(Logging) {
