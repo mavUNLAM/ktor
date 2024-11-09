@@ -43,5 +43,3 @@ class MarvelCrypto {
      */
 
 }
-
-expect fun getNativeHash(string: String): String
