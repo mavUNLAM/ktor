@@ -59,6 +59,7 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(compose.material3)
             implementation(libs.runtime)
+            implementation(libs.napier.logging)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
