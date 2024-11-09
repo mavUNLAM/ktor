@@ -1,37 +1,68 @@
 package com.unlam.mav.ktor
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import ktor.composeapp.generated.resources.Res
-import ktor.composeapp.generated.resources.compose_multiplatform
+import com.unlam.mav.ktor.data.database.cache.DatabaseDriverFactory
+import com.unlam.mav.ktor.data.database.cache.ExpectActualDatabase
+import com.unlam.mav.ktor.data.network.KtorService
+import com.unlam.mav.ktor.data.repository.CharacterRepositoryImp
+import com.unlam.mav.ktor.ui.galleryscreen.GalleryScreen
+import com.unlam.mav.ktor.ui.galleryscreen.GalleryScreenViewModel
+import io.github.aakira.napier.Napier
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpRequestRetry
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
 @Composable
-@Preview
-fun App() {
+fun App(databaseDriverFactory: DatabaseDriverFactory, initLogger: () -> Unit) {
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+        val httpClient = remember {
+            HttpClient {
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            ignoreUnknownKeys = true
+                        }
+                    )
                 }
-            }
+                install(HttpRequestRetry) {
+                    retryOnServerErrors(maxRetries = 5)
+                    exponentialDelay()
+                }
+                // usar naper como logger
+                install(Logging) {
+                    level = LogLevel.ALL
+                    logger = object: Logger {
+                        override fun log(message: String) {
+                            Napier.v(tag = "HttpClient", message = message)
+                        }
+                    }
+                }
+            }.also { initLogger() }
         }
+        val ktorService = remember {
+            KtorService(
+                httpClient = httpClient
+            )
+        }
+        val database = remember {
+            ExpectActualDatabase(databaseDriverFactory)
+        }
+        val repository = remember {
+            CharacterRepositoryImp(ktorService, database)
+        }
+        val viewModel = GalleryScreenViewModel(repository = repository)
+        GalleryScreen(
+            modifier = Modifier.fillMaxSize(),
+            viewModel = viewModel
+        )
     }
 }

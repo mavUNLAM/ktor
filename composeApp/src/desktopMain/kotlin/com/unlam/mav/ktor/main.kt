@@ -8,6 +8,7 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "ktor",
     ) {
-        App()
+        //ya he dejado por mucho tiempo tirada la versión desktop.... así que por ahora lo dejamos así
+        //App()
     }
 }

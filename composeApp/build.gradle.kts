@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -25,20 +27,52 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.android.driver)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            //implementation(compose.material)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.contentnegotiation)
+            implementation(libs.ktor.serialization.json)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(kotlincrypto.endians.endians)
+            implementation(kotlincrypto.hash.sha2)
+            implementation(kotlincrypto.hash.sha3)
+            implementation(kotlincrypto.macs.hmac.sha2)
+            implementation(kotlincrypto.macs.hmac.sha3)
+            implementation(kotlincrypto.macs.kmac)
+            implementation(kotlincrypto.secureRandom)
+            implementation(kotlincrypto.hash.md5)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.navigation.compose)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
+            implementation(compose.material3)
+            implementation(libs.runtime)
+            implementation(libs.napier.logging)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.ktor.client.okhttp)
+        }
+    }
+
+    sqldelight {
+        databases {
+            create("MarvelDatabase") {
+                packageName.set("com.unlam.mav.ktor.data.database.cache")
+            }
         }
     }
 }
